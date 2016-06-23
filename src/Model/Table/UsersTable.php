@@ -54,27 +54,38 @@ class UsersTable extends Table
 
         $validator
             ->requirePresence('name', 'create')
-            ->notEmpty('name');
+            ->notEmpty('name')
+            ->add('name', [
+                'length' => [
+                    'rule' => ['maxLength', 32],
+                    'message' => __('Name cannot be too long. ')
+                ]
+            ]);
 
         $validator
-            ->email('email')
+            ->email('email', false, __('The email value is invalid'))
             ->requirePresence('email', 'create')
-            ->notEmpty('email')
-            ->add('email', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
+            ->notEmpty('email');
 
         $validator
             ->requirePresence('password', 'create')
-            ->notEmpty('password');
-
+            ->notEmpty('password')
+            ->add('password', [
+                'length' => [
+                    'rule' => ['custom', '/^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*)[0-9a-zA-Z]{6,}$/i'],
+                    'message' => __('Password must contain at least one letter, at least one number, and be longer than six charaters.')
+                ]
+            ]);
+        
         $validator
-            ->integer('role')
-            ->requirePresence('role', 'create')
-            ->notEmpty('role');
-
-        $validator
-            ->integer('status')
-            ->requirePresence('status', 'create')
-            ->notEmpty('status');
+            ->requirePresence('re_password', 'create')
+            ->notEmpty('re_password')
+            ->add('re_password', [
+                'notMatch' => [
+                    'rule' => ['compareWith', 'password'],
+                    'message' => __('Password is not match')
+                ]
+            ]);
 
         return $validator;
     }
@@ -88,7 +99,7 @@ class UsersTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->add($rules->isUnique(['email']));
+        $rules->add($rules->isUnique(['email'], __('This email is already in use.')));
         return $rules;
     }
 }

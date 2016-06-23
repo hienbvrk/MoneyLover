@@ -1,7 +1,10 @@
 <?php
+
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Mailer\Email;
+use \Cake\Auth\DefaultPasswordHasher;
 
 /**
  * Users Controller
@@ -10,6 +13,14 @@ use App\Controller\AppController;
  */
 class UsersController extends AppController
 {
+
+    public function beforeFilter(\Cake\Event\Event $event)
+    {
+        parent::beforeFilter($event);
+
+        // Allow users to register and logout
+        $this->Auth->allow(['add', 'logout', 'forgotPass', 'active']);
+    }
 
     /**
      * Index method
@@ -48,12 +59,25 @@ class UsersController extends AppController
      */
     public function add()
     {
+        $this->viewBuilder()->layout('layout_login');
         $user = $this->Users->newEntity();
         if ($this->request->is('post')) {
             $user = $this->Users->patchEntity($user, $this->request->data);
+            $user->token = (new DefaultPasswordHasher())->hash($user->email);
             if ($this->Users->save($user)) {
-                $this->Flash->success(__('The user has been saved.'));
-                return $this->redirect(['action' => 'index']);
+                $email = new Email('default');
+                $email->template('registed')
+                        ->emailFormat('html')
+                        ->to($user->email)
+                        ->subject('Welcome to Money Lover!')
+                        ->viewVars([
+                            'name' => $user->name,
+                            'token' => $user->token
+                        ])
+                        ->send();
+
+                $this->Flash->success(__('The user has been registed. Please check email.'));
+                return $this->redirect(['action' => 'login']);
             } else {
                 $this->Flash->error(__('The user could not be saved. Please, try again.'));
             }
@@ -105,4 +129,36 @@ class UsersController extends AppController
         }
         return $this->redirect(['action' => 'index']);
     }
+
+    public function login()
+    {
+        $this->viewBuilder()->layout('layout_login');
+
+        if ($this->request->is('post')) {
+            $user = $this->Auth->indentify();
+            if ($user) {
+                $this->Auth->setUser($user);
+                return $this->redirect($this->Auth->redirectUrl());
+            }
+
+            $this->Flash->error(__('Invalid username or password, try again'));
+        }
+    }
+
+    public function logout()
+    {
+        return $this->redirect($this->Auth->logout());
+    }
+
+    public function active()
+    {
+        $this->viewBuilder()->layout('layout_login');
+        
+    }
+
+    public function forgotPass()
+    {
+        $this->viewBuilder()->layout('layout_login');
+    }
+
 }

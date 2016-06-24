@@ -4,44 +4,17 @@
     </div>
     <!-- /.login-logo -->
     <div class="login-box-body">
-        <p class="login-box-msg">Sign in to start your session</p>
-        
-        <?= $this->Flash->render() ?>
-        <?php $this->Form->templates($form_templates['loginForm']); ?>
-
-        <?php
-        echo $this->Form->create(null, ['url' => ['action' => 'login'], 'type' => 'post']);
-
-        echo $this->Form->input('email', [
-            'class' => 'form-control',
-            'placeholder' => __('Email'),
-            'templateVars' => ['glyphicon' => '<span class="glyphicon glyphicon-envelope form-control-feedback"></span>']]);
-
-        echo $this->Form->input('password', [
-            'class' => 'form-control',
-            'placeholder' => __('Password'),
-            'templateVars' => ['glyphicon' => '<span class="glyphicon glyphicon-lock form-control-feedback"></span>']]);
-        ?>
-        <div class="row">
-            <div class="col-xs-8">
-                <div class="checkbox icheck">
-                    <label>
-                        <input type="checkbox"> Remember Me
-                    </label>
-                </div>
-            </div>
-            <!-- /.col -->
-            <div class="col-xs-4">
-                <?= $this->Form->submit(__('Sign In'), ['class' => 'btn btn-primary btn-block btn-flat']) ?>
-            </div>
-            <!-- /.col -->
+        <?php if($success) { ?>
+        <div class="callout callout-success">
+            <h4>The account is active!</h4>
+            <p>Please click <?= $this->Html->link(__('here'), ['action' => 'login', '_full' => true], ['escape' => false]); ?> to sign in. </p>
         </div>
-        <?= $this->Form->end() ?>
-        <!-- /.social-auth-links -->
-
-        <?= $this->Html->link(__('I forgot my password'), ['action' => 'forgotPass', '_full' => true], ['escape' => false]); ?>
-        <br>
-        <?= $this->Html->link(__('Register a new membership'), ['action' => 'add', '_full' => true], ['escape' => false]); ?>
+        <?php } else {?>
+        <div class="callout callout-danger">
+            <h4>Can't active account.</h4>
+            <p>Link active expired or incorrect. Please register again <?= $this->Html->link(__('here'), ['action' => 'add', '_full' => true], ['escape' => false]); ?></p>
+        </div>
+        <?php } ?>
     </div>
     <!-- /.login-box-body -->
 </div>

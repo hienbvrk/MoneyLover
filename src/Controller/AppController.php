@@ -45,6 +45,12 @@ class AppController extends Controller
         $this->loadComponent('RequestHandler');
         $this->loadComponent('Flash');
         $this->loadComponent('Auth', [
+            'authenticate' => [
+                'Form' => [
+                    'fields' => ['username' => 'email'],
+                    'scope' => ['Users.status' => Configure::read('User.isActive')]
+                ]
+            ],
             'loginRedirect' => [
                 'controller' => 'users',
                 'action' => 'index'
@@ -54,8 +60,6 @@ class AppController extends Controller
                 'action' => 'login'
             ]
         ]);
-        
-        $this->set('form_templates', Configure::read('Templates'));
     }
 
     /**

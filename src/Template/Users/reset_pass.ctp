@@ -4,25 +4,31 @@
     </div>
     <!-- /.login-logo -->
     <div class="login-box-body">
-        <p class="login-box-msg">Input the email to reset password</p>
+        <p class="login-box-msg">Input the new password to reset password</p>
         
         <?= $this->Flash->render() ?>
         <?php $this->Form->templates($form_templates['loginForm']); ?>
 
         <?php
-        echo $this->Form->create(null, ['url' => ['action' => 'forgotPass'], 'type' => 'post']);
+        echo $this->Form->create($user, ['type' => 'post']);
 
-        echo $this->Form->input('email', [
+        echo $this->Form->input('password', [
             'class' => 'form-control',
-            'placeholder' => __('Email'),
-            'templateVars' => ['glyphicon' => '<span class="glyphicon glyphicon-envelope form-control-feedback"></span>']]);
+            'placeholder' => __('Password'),
+            'templateVars' => ['glyphicon' => '<span class="glyphicon glyphicon-lock form-control-feedback"></span>']]);
+        
+        echo $this->Form->input('re_password', [
+            'type' => 'password',
+            'class' => 'form-control',
+            'placeholder' => __('Retype password'),
+            'templateVars' => ['glyphicon' => '<span class="glyphicon glyphicon-log-in form-control-feedback"></span>']]);
         ?>
         <div class="row">
-            <div class="col-xs-8">
+            <div class="col-xs-7">
             </div>
             <!-- /.col -->
-            <div class="col-xs-4">
-                <?= $this->Form->submit(__('Send'), ['class' => 'btn btn-primary btn-block btn-flat']) ?>
+            <div class="col-xs-5">
+                <?= $this->Form->submit(__('Reset Password'), ['class' => 'btn btn-primary btn-flat']) ?>
             </div>
             <!-- /.col -->
         </div>

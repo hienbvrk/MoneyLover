@@ -102,4 +102,33 @@ class UsersTable extends Table
         $rules->add($rules->isUnique(['email'], __('This email is already in use.')));
         return $rules;
     }
+    
+    public function getActiveUserBy($field, $value) {
+        $user = $this->find('all', [
+            'conditions' => [$field => $value, 'status' => \Cake\Core\Configure::read('User.isActive')]
+        ])->first();
+        
+        return $user;
+    }
+    
+    public function getIdByEmail($email) {
+        $user = $this->find('all', [
+            'conditions' => ['email' => $email, 'status !=' => \Cake\Core\Configure::read('User.isActive')]
+        ])->first();
+        
+        return $user ? $user->id : null;
+    }
+    
+    public function activeByToken($token) {
+        $user = $this->find('all', [
+            'conditions' => ['token' => $token, 'status !=' => \Cake\Core\Configure::read('User.isActive')]
+        ])->first();
+        
+        if($user) {
+            $user->status = \Cake\Core\Configure::read('User.isActive');
+            return $this->save($user);
+        }
+        
+        return false;
+    }
 }

@@ -10,7 +10,7 @@
         <?php $this->Form->templates($form_templates['loginForm']); ?>
 
         <?php
-        echo $this->Form->create($user, ['url' => ['action' => 'register'], 'type' => 'post']);
+        echo $this->Form->create($user, ['url' => ['action' => 'add'], 'type' => 'post']);
 
         echo $this->Form->input('name', [
             'class' => 'form-control',

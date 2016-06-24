@@ -221,3 +221,4 @@ Type::build('datetime')
     ->useImmutable();
 
 Configure::load('templatesConfig','default');
+Configure::load('config','default');

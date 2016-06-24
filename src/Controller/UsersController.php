@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Controller\AppController;
 use Cake\Mailer\Email;
 use \Cake\Auth\DefaultPasswordHasher;
+use Cake\Core\Configure;
 
 /**
  * Users Controller
@@ -19,7 +20,9 @@ class UsersController extends AppController
         parent::beforeFilter($event);
 
         // Allow users to register and logout
-        $this->Auth->allow(['add', 'logout', 'forgotPass', 'active']);
+        $this->Auth->allow(['add', 'logout', 'forgotPass', 'active', 'resetPass']);
+
+        $this->set('form_templates', Configure::read('Templates'));
     }
 
     /**
@@ -63,13 +66,14 @@ class UsersController extends AppController
         $user = $this->Users->newEntity();
         if ($this->request->is('post')) {
             $user = $this->Users->patchEntity($user, $this->request->data);
+            $user->id = $this->Users->getIdByEmail($this->request->data['email']);
             $user->token = (new DefaultPasswordHasher())->hash($user->email);
             if ($this->Users->save($user)) {
                 $email = new Email('default');
                 $email->template('registed')
                         ->emailFormat('html')
                         ->to($user->email)
-                        ->subject('Welcome to Money Lover!')
+                        ->subject(__('Welcome to Money Lover!'))
                         ->viewVars([
                             'name' => $user->name,
                             'token' => $user->token
@@ -135,7 +139,7 @@ class UsersController extends AppController
         $this->viewBuilder()->layout('layout_login');
 
         if ($this->request->is('post')) {
-            $user = $this->Auth->indentify();
+            $user = $this->Auth->identify();
             if ($user) {
                 $this->Auth->setUser($user);
                 return $this->redirect($this->Auth->redirectUrl());
@@ -153,12 +157,67 @@ class UsersController extends AppController
     public function active()
     {
         $this->viewBuilder()->layout('layout_login');
-        
+        $this->set('success', $this->Users->activeByToken($this->request->query('token')));
     }
 
     public function forgotPass()
     {
         $this->viewBuilder()->layout('layout_login');
+
+        $user = $this->Users->getActiveUserBy('email', $this->request->data('email'));
+        if ($this->request->is('post')) {
+            if ($user) {
+                $user->token = (new DefaultPasswordHasher())->hash($user->email . time());
+                if ($this->Users->save($user)) {
+                    $email = new Email('default');
+                    $email->template('forgotPass')
+                            ->emailFormat('html')
+                            ->to($user->email)
+                            ->subject(__('Reset password!'))
+                            ->viewVars([
+                                'name' => $user->name,
+                                'token' => $user->token
+                            ])
+                            ->send();
+
+                    $this->Flash->success(__('Password was reset. Please check email.'));
+                    return $this->redirect(['action' => 'login']);
+                } else {
+                    $this->Flash->error(__('The user could not be saved. Please, try again.'));
+                }
+            } else {
+                $this->Flash->error(__('Email is not exist.'));
+            }
+        }
+        
+        $this->set(compact('user'));
+        $this->set('_serialize', ['user']);
+    }
+
+    public function resetPass()
+    {
+        $this->viewBuilder()->layout('layout_login');
+        $user = $this->Users->getActiveUserBy('token', $this->request->query('token'));
+        if ($this->request->is('post')) {
+            if ($user) {
+                $user = $this->Users->patchEntity($user, $this->request->data);
+                $user->token = (new DefaultPasswordHasher())->hash($user->email . time());
+                if ($this->Users->save($user)) {
+                    $this->Flash->success(__('Password was reset successfully.'));
+                    return $this->redirect(['action' => 'login']);
+                } else {
+                    $this->Flash->error(__('The user could not be saved. Please, try again.'));
+                }
+            } else {
+                $this->Flash->error(__('User is not exist.'));
+            }
+        }
+        
+        $this->set(compact('user'));
+        $this->set('_serialize', ['user']);
+        if(empty($user)) {
+            $this->viewBuilder()->template('reset_pass_fail');
+        }
     }
 
 }

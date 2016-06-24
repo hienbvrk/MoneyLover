@@ -30,8 +30,9 @@ class UsersController extends AppController
      *
      * @return \Cake\Network\Response|null
      */
-    public function index()
+    public function dashboard()
     {
+        $this->viewBuilder()->layout('layout');
         $users = $this->paginate($this->Users);
 
         $this->set(compact('users'));
@@ -45,7 +46,7 @@ class UsersController extends AppController
      * @return \Cake\Network\Response|null
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function view($id = null)
+    public function profile($id = null)
     {
         $user = $this->Users->get($id, [
             'contain' => ['Categories', 'Wallets']
@@ -68,6 +69,7 @@ class UsersController extends AppController
             $user = $this->Users->patchEntity($user, $this->request->data);
             $user->id = $this->Users->getIdByEmail($this->request->data['email']);
             $user->token = (new DefaultPasswordHasher())->hash($user->email);
+            $user->avatar = Configure::read('User.avatar');
             if ($this->Users->save($user)) {
                 $email = new Email('default');
                 $email->template('registed')
@@ -240,4 +242,7 @@ class UsersController extends AppController
         }
     }
 
+    public function intall() {
+        
+    }
 }

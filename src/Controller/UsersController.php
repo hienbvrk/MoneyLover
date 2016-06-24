@@ -137,10 +137,30 @@ class UsersController extends AppController
     public function login()
     {
         $this->viewBuilder()->layout('layout_login');
-
+        
+        if(empty($this->request->data)) {
+            $cookie = $this->Cookie->read('rememberMe');
+            if (!is_null($cookie)) {
+                $this->request->data = $cookie;
+                $user = $this->Auth->identify();
+                if ($user) {
+                    $this->redirect($this->Auth->redirectUrl());
+                } else {
+                    $this->Cookie->delete('rememberMe');
+                }
+            }
+        }
+        
         if ($this->request->is('post')) {
             $user = $this->Auth->identify();
             if ($user) {
+                if($this->request->data('rememberMe')) {
+                    $cookie = array();
+                    $cookie['email'] = $this->request->data['email'];
+                    $cookie['password'] = $this->request->data['password']; 
+                    $this->Cookie->write('rememberMe', $cookie, true, Configure::read('loginRemember'));
+                    unset($this->request->data['rememberMe']);
+                }
                 $this->Auth->setUser($user);
                 return $this->redirect($this->Auth->redirectUrl());
             }

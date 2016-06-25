@@ -16,6 +16,7 @@ namespace App\Controller;
 
 use Cake\Controller\Controller;
 use Cake\Event\Event;
+use Cake\Core\Configure;
 
 /**
  * Application Controller
@@ -43,6 +44,23 @@ class AppController extends Controller
 
         $this->loadComponent('RequestHandler');
         $this->loadComponent('Flash');
+        $this->loadComponent('Cookie');
+        $this->loadComponent('Auth', [
+            'authenticate' => [
+                'Form' => [
+                    'fields' => ['username' => 'email'],
+                    'scope' => ['Users.status' => Configure::read('User.isActive')]
+                ]
+            ],
+            'loginRedirect' => [
+                'controller' => 'users',
+                'action' => 'dashboard'
+            ],
+            'logoutRedirect' => [
+                'controller' => 'users',
+                'action' => 'login'
+            ]
+        ]);
     }
 
     /**

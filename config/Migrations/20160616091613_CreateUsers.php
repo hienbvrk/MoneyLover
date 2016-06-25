@@ -38,6 +38,16 @@ class CreateUsers extends AbstractMigration
             'limit' => 1,
             'null' => false,
         ]);
+        $table->addColumn('avatar', 'string', [
+            'default' => null,
+            'limit' => 64,
+            'null' => false,
+        ]);
+        $table->addColumn('token', 'string', [
+            'default' => null,
+            'limit' => 255,
+            'null' => true,
+        ]);
         $table->addColumn('created', 'datetime', [
             'default' => null,
             'null' => false,

@@ -1,0 +1,14 @@
+{
+  "name": "MoneyLover",
+  "homepage": "https://github.com/hienbvrk/MoneyLover",
+  "authors": [
+    "HienBV <hienbv@rikkeisoft.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "dependencies": {
+    "AdminLTE": "admin-lte#^2.3.3",
+    "jquery": "^3.0.0"
+  }
+}

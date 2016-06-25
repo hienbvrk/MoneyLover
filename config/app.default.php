@@ -179,11 +179,14 @@ return [
         'default' => [
             'className' => 'Mail',
             // The following keys are used in SMTP transports
-            'host' => 'localhost',
-            'port' => 25,
+            'host' => 'ssl://smtp.gmail.com',
+            'port' => 465,
             'timeout' => 30,
-            'username' => 'user',
-            'password' => 'secret',
+            'from' => [
+                'bvhcontact@gmail.com' => 'Money Lovers'
+            ],
+            'username' => 'bvhcontact@gmail.com',
+            'password' => 'buivanhien@gmail.com',
             'client' => null,
             'tls' => null,
             'url' => env('EMAIL_TRANSPORT_DEFAULT_URL', null),
@@ -226,9 +229,9 @@ return [
              * the following line and set the port accordingly
              */
             //'port' => 'non_standard_port_number',
-            'username' => 'my_app',
-            'password' => 'secret',
-            'database' => 'my_app',
+            'username' => 'root',
+            'password' => '123456',
+            'database' => 'money_lovers',
             'encoding' => 'utf8',
             'timezone' => 'UTC',
             'flags' => [],

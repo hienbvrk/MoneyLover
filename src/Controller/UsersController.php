@@ -20,7 +20,7 @@ class UsersController extends AppController
         parent::beforeFilter($event);
 
         // Allow users to register and logout
-        $this->Auth->allow(['add', 'logout', 'forgotPass', 'active', 'resetPass']);
+        $this->Auth->allow(['add', 'logout', 'forgotPass', 'active', 'resetPass', 'login']);
 
         $this->set('form_templates', Configure::read('Templates'));
     }
@@ -32,7 +32,6 @@ class UsersController extends AppController
      */
     public function dashboard()
     {
-        $this->viewBuilder()->layout('layout');
         $users = $this->paginate($this->Users);
 
         $this->set(compact('users'));
@@ -173,6 +172,7 @@ class UsersController extends AppController
 
     public function logout()
     {
+        $this->Cookie->delete('rememberMe');
         return $this->redirect($this->Auth->logout());
     }
 
@@ -242,7 +242,7 @@ class UsersController extends AppController
         }
     }
 
-    public function intall() {
-        
+    public function initWallet() {
+        $this->viewBuilder()->layout('layout_login');
     }
 }

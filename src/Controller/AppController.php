@@ -17,6 +17,7 @@ namespace App\Controller;
 use Cake\Controller\Controller;
 use Cake\Event\Event;
 use Cake\Core\Configure;
+use \Cake\Routing\Router;
 
 /**
  * Application Controller
@@ -61,6 +62,10 @@ class AppController extends Controller
                 'action' => 'login'
             ]
         ]);
+
+        $this->viewBuilder()->layout('layout');
+        $this->setLeftMenu();
+        $this->set('loggedUser', $this->Auth->user());
     }
 
     /**
@@ -72,9 +77,22 @@ class AppController extends Controller
     public function beforeRender(Event $event)
     {
         if (!array_key_exists('_serialize', $this->viewVars) &&
-            in_array($this->response->type(), ['application/json', 'application/xml'])
+                in_array($this->response->type(), ['application/json', 'application/xml'])
         ) {
             $this->set('_serialize', true);
         }
     }
+
+    protected function setLeftMenu()
+    {
+        $this->set('leftMenu', [
+            'dashboard' => Router::url(['controller' => 'Users', 'action' => 'dashboard']),
+            'wallets' => Router::url(['controller' => 'Wallet', 'action' => 'index']),
+            'transactions' => Router::url(['controller' => 'Transactions', 'action' => 'index']),
+            'tranfers' => Router::url(['controller' => 'Tranfers', 'action' => 'index']),
+            'report_by_category' => Router::url(['controller' => 'Wallet', 'action' => 'index']),
+            'report_by_time' => Router::url(['controller' => 'Wallet', 'action' => 'index']),
+        ]);
+    }
+
 }

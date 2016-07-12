@@ -62,6 +62,7 @@ Router::scope('/', function (RouteBuilder $routes) {
     $routes->connect('/reset-pass', ['controller' => 'Users', 'action' => 'resetPass']);
     $routes->connect('/active', ['controller' => 'Users', 'action' => 'active']);
     $routes->connect('/profile', ['controller' => 'Users', 'action' => 'profile']);
+    $routes->connect('/init-wallet', ['controller' => 'Users', 'action' => 'initWallet']);
 
     /**
      * Connect catchall routes for all controllers.

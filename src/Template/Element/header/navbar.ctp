@@ -9,23 +9,23 @@
             <!-- User Account: style can be found in dropdown.less -->
             <li class="dropdown user user-menu">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                    <img src="avatars/avatar.png" class="user-image" alt="User Image">
-                    <span class="hidden-xs">Alexander Pierce</span>
+                    <img src="<?= $this->Img->avatar($loggedUser['avatar']) ?>" class="user-image">
+                    <span class="hidden-xs"><?= $loggedUser['name'] ?></span>
                 </a>
                 <ul class="dropdown-menu">
                     <!-- User image -->
                     <li class="user-header">
-                        <img src="avatars/avatar.png" class="img-circle" alt="User Image">
+                        <img src="<?= $this->Img->avatar($loggedUser['avatar']) ?>" class="img-circle">
 
                         <p>
-                            Alexander Pierce - Web Developer
-                            <small>Member since Nov. 2012</small>
+                          <?= $loggedUser['name'] ?>
+                            <small><?php echo __('Member since {0}', date('D, M Y', strtotime($loggedUser['created']))); ?></small>
                         </p>
                     </li>
                     <!-- Menu Footer-->
                     <li class="user-footer">
                         <div class="pull-left">
-                            <?= $this->Html->link(__('Profile'), ['controller' => 'users', 'action' => 'profile', '_full' => true], ['escape' => false, 'class' => 'btn btn-default btn-flat']); ?>
+                          <?= $this->Html->link(__('Profile'), ['controller' => 'users', 'action' => 'profile', '_full' => true], ['escape' => false, 'class' => 'btn btn-default btn-flat']); ?>
                         </div>
                         <div class="pull-right">
                             <?= $this->Html->link(__('Sign out'), ['controller' => 'users', 'action' => 'logout', '_full' => true], ['escape' => false, 'class' => 'btn btn-default btn-flat']); ?>

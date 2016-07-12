@@ -1,10 +1,14 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="utf-8">
+        <?= $this->Html->charset() ?>
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>AdminLTE 2 | Dashboard</title>
+        <title>
+            <?= $this->fetch('title') ?>
+            <?= ' | ' . \Cake\Core\Configure::read('suffixTitlePage'); ?>
+        </title>
         <!-- Tell the browser to be responsive to screen width -->
+        <?= $this->Html->meta('icon') ?>
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 
         <?= $this->Html->css('/bower_components/AdminLTE/bootstrap/css/bootstrap.min.css') ?>

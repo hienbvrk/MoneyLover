@@ -17,7 +17,8 @@
         <?= $this->Html->css('/bower_components/AdminLTE/dist/css/AdminLTE.min.css') ?>
         <?= $this->Html->css('/bower_components/AdminLTE/dist/css/skins/_all-skins.min.css') ?>
         <?= $this->Html->css('/bower_components/AdminLTE/plugins/iCheck/square/blue.css') ?>
-
+        <?= $this->fetch('css') ?>
+        
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>

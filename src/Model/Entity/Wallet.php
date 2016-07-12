@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
@@ -32,4 +33,10 @@ class Wallet extends Entity
         '*' => true,
         'id' => false,
     ];
+
+    protected function _getModified($modified)
+    {
+        return date('Y-m-d H:i:s', strtotime($modified));
+    }
+
 }

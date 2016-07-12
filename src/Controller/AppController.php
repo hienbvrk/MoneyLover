@@ -87,7 +87,7 @@ class AppController extends Controller
     {
         $this->set('leftMenu', [
             'dashboard' => Router::url(['controller' => 'Users', 'action' => 'dashboard']),
-            'wallets' => Router::url(['controller' => 'Wallet', 'action' => 'index']),
+            'wallets' => Router::url(['controller' => 'Wallets', 'action' => 'index']),
             'transactions' => Router::url(['controller' => 'Transactions', 'action' => 'index']),
             'tranfers' => Router::url(['controller' => 'Tranfers', 'action' => 'index']),
             'report_by_category' => Router::url(['controller' => 'Wallet', 'action' => 'index']),

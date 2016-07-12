@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controller;
 
 use App\Controller\AppController;
@@ -110,4 +111,5 @@ class WalletsController extends AppController
         }
         return $this->redirect(['action' => 'index']);
     }
+
 }
